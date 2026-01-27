@@ -1,3 +1,6 @@
+import area from "@turf/area";
+import bbox from "@turf/bbox";
+
 import { OsmableError } from "../domain/errors.js";
 import { writeJson, writeText } from "../io/output.js";
 import { resolveLocation } from "./location.js";
@@ -12,7 +15,12 @@ export type IsochroneOptions = {
 type IsochroneFeatureCollection = {
 	type: "FeatureCollection";
 	features?: Array<{
-		properties?: { time?: number };
+		type?: "Feature";
+		geometry?: {
+			type: string;
+			coordinates: unknown;
+		} | null;
+		properties?: { time?: number; contour?: number; metric?: string };
 	}>;
 };
 
@@ -94,10 +102,29 @@ export const runIsochrone = async (
 	if (format === "text") {
 		const collection = data as IsochroneFeatureCollection;
 		if (collection.type === "FeatureCollection" && collection.features) {
-			for (const feature of collection.features) {
-				const time = feature.properties?.time;
-				if (typeof time === "number") {
-					writeText(`time: ${time}`);
+			const minutes = parseMinutes(options.minutes).join(",");
+			const fromLabel = origin.displayName ?? options.from;
+			writeText(`from: ${fromLabel}`);
+			writeText(`  minutes: ${minutes}`);
+			const sorted = [...collection.features].sort((a, b) => {
+				const left = a.properties?.contour ?? a.properties?.time ?? 0;
+				const right = b.properties?.contour ?? b.properties?.time ?? 0;
+				return left - right;
+			});
+			for (const feature of sorted) {
+				const contour = feature.properties?.contour ?? feature.properties?.time;
+				if (typeof contour !== "number") continue;
+				const unit =
+					feature.properties?.metric === "distance" ? "distance" : "time";
+				writeText(`  ${unit}: ${contour}`);
+				if (feature.type === "Feature") {
+					const typedFeature = feature as unknown as object;
+					const featureBbox = bbox(typedFeature);
+					const km2 = area(typedFeature) / 1_000_000;
+					writeText(
+						`    bbox: ${featureBbox[1]},${featureBbox[0]},${featureBbox[3]},${featureBbox[2]}`,
+					);
+					writeText(`    area_km2: ${km2.toFixed(3)}`);
 				}
 			}
 			return;
