@@ -1,0 +1,61 @@
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	describe,
+	expect,
+	it,
+	vi,
+} from "vitest";
+
+import { runPoiFetch } from "../src/commands/poi-fetch.js";
+
+const server = setupServer(
+	http.get("https://nominatim.test/search.php", () =>
+		HttpResponse.json([
+			{
+				boundingbox: ["35.6", "35.8", "139.7", "139.8"],
+			},
+		]),
+	),
+	http.post("https://overpass.test/api/interpreter", async () =>
+		HttpResponse.json({
+			elements: [
+				{
+					type: "node",
+					id: 1,
+					lat: 35.7,
+					lon: 139.7,
+					tags: { name: "Cafe" },
+				},
+			],
+		}),
+	),
+);
+
+afterAll(() => server.close());
+
+beforeAll(() => server.listen());
+
+afterEach(() => {
+	server.resetHandlers();
+	vi.restoreAllMocks();
+});
+
+describe("runPoiFetch", () => {
+	it("prints jsonl output by default", async () => {
+		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
+		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
+		const stdout = vi
+			.spyOn(process.stdout, "write")
+			.mockImplementation(() => true);
+
+		await runPoiFetch({ within: "東京都台東区", preset: "cafe" });
+
+		expect(stdout).toHaveBeenCalledWith(
+			'{"type":"Feature","id":"node/1","properties":{"id":"node/1","name":"Cafe"},"geometry":{"type":"Point","coordinates":[139.7,35.7]}}\n',
+		);
+	});
+});
