@@ -2,6 +2,7 @@
 import "dotenv/config";
 import { Command } from "commander";
 import { runGeocode } from "./commands/geocode.js";
+import { runReverse } from "./commands/reverse.js";
 import { OsmableError } from "./domain/errors.js";
 import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
 
@@ -50,8 +51,10 @@ withFormat(
 		.command("reverse")
 		.requiredOption("--lat <number>", "latitude")
 		.requiredOption("--lon <number>", "longitude")
-		.action(() => {
-			notImplemented("reverse");
+		.option("--lang <lang>", "language")
+		.option("--zoom <number>", "zoom level")
+		.action(async (options) => {
+			await runReverse(options);
 		}),
 	"json",
 );
