@@ -3,6 +3,7 @@ import "dotenv/config";
 import { Command } from "commander";
 import { runAoiResolve } from "./commands/aoi.js";
 import { runGeocode } from "./commands/geocode.js";
+import { runIsochrone } from "./commands/isochrone.js";
 import { runPoiCount } from "./commands/poi-count.js";
 import { runPoiFetch } from "./commands/poi-fetch.js";
 import { runReverse } from "./commands/reverse.js";
@@ -117,8 +118,8 @@ withFormat(
 		.requiredOption("--from <place>", "origin place name or lat,lon")
 		.requiredOption("--minutes <list>", "comma-separated minutes")
 		.option("--mode <mode>", "pedestrian | bicycle | car", "pedestrian")
-		.action(() => {
-			notImplemented("isochrone");
+		.action(async (options) => {
+			await runIsochrone(options);
 		}),
 	"geojson",
 );
