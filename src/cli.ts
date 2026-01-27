@@ -56,7 +56,7 @@ withFormat(
 		.action(async (options) => {
 			await runReverse(options);
 		}),
-	"json",
+	"text",
 );
 
 const aoi = program.command("aoi").description("AOI operations");
