@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { Command } from "commander";
+import { runGeocode } from "./commands/geocode.js";
 import { OsmableError } from "./domain/errors.js";
 import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
 
@@ -37,10 +39,10 @@ withFormat(
 		.option("--lang <lang>", "language")
 		.option("--country <code>", "country code")
 		.option("--all", "return all candidates")
-		.action(() => {
-			notImplemented("geocode");
+		.action(async (query, options) => {
+			await runGeocode(query, options);
 		}),
-	"json",
+	"text",
 );
 
 withFormat(
@@ -129,7 +131,7 @@ program.on("option:verbose", () => {
 });
 
 try {
-	program.parse();
+	await program.parseAsync();
 } catch (error) {
 	const options = program.opts() as { format?: OutputFormat };
 	handleError(error, options.format);
