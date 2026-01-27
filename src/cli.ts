@@ -6,6 +6,7 @@ import { runGeocode } from "./commands/geocode.js";
 import { runPoiCount } from "./commands/poi-count.js";
 import { runPoiFetch } from "./commands/poi-fetch.js";
 import { runReverse } from "./commands/reverse.js";
+import { runRoute } from "./commands/route.js";
 import { OsmableError } from "./domain/errors.js";
 import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
 
@@ -104,8 +105,8 @@ withFormat(
 		.requiredOption("--from <place>", "origin place name or lat,lon")
 		.requiredOption("--to <place>", "destination place name or lat,lon")
 		.option("--mode <mode>", "pedestrian | bicycle | car", "pedestrian")
-		.action(() => {
-			notImplemented("route");
+		.action(async (options) => {
+			await runRoute(options);
 		}),
 	"json",
 );
