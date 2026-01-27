@@ -29,11 +29,11 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
   - `osmable aoi resolve "東京都台東区"`
   - `osmable aoi resolve "東京都台東区" --format geojson`
 - POI count:
-  - `osmable poi count --preset cafe --within "東京都台東区"`
+  - `osmable poi count --tag amenity=cafe --within "東京都台東区"`
   - `osmable poi count --tag amenity=cafe --within @aoi.geojson --format json`
 - POI fetch:
-  - `osmable poi fetch --preset cafe --within "東京都台東区"`
-  - `osmable poi fetch --preset cafe --within "東京都台東区" --format geojson`
+  - `osmable poi fetch --tag amenity=cafe --within "東京都台東区"`
+  - `osmable poi fetch --tag amenity=cafe --within "東京都台東区" --format geojson`
 - Route:
   - `osmable route --from "東京駅" --to "浅草寺"`
   - `osmable route --from "東京駅" --to "浅草寺" --mode bicycle --format json`

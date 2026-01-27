@@ -95,6 +95,8 @@ withFormat(
 		.requiredOption("--within <within>", "place name, @file, or -")
 		.option("--tag <tag>", "OSM tag (key=value)")
 		.option("--preset <name>", "preset name")
+		.option("--limit <number>", "maximum results")
+		.option("--sort <field>", "name | id")
 		.action(async (options) => {
 			await runPoiFetch(options);
 		}),

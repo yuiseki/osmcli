@@ -13,6 +13,8 @@ export type PoiFetchOptions = {
 	within: string;
 	tag?: string;
 	preset?: string;
+	limit?: string;
+	sort?: string;
 	format?: string;
 };
 
@@ -47,6 +49,44 @@ const formatFeatureText = (feature: Record<string, unknown>): string => {
 	return label;
 };
 
+const parseLimit = (value: string | undefined): number | null => {
+	if (value === undefined) return null;
+	const parsed = Number.parseInt(value, 10);
+	if (!Number.isFinite(parsed) || parsed <= 0) {
+		throw new OsmableError({
+			code: "INVALID_INPUT",
+			message: "limit must be a positive integer",
+		});
+	}
+	return parsed;
+};
+
+const normalizeSort = (value: string | undefined): "name" | "id" | null => {
+	if (!value) return null;
+	const normalized = value.toLowerCase();
+	if (normalized === "name" || normalized === "id") return normalized;
+	throw new OsmableError({
+		code: "INVALID_INPUT",
+		message: "sort must be name or id",
+	});
+};
+
+const extractSortKey = (
+	feature: Record<string, unknown>,
+	field: "name" | "id",
+) => {
+	if (field === "id" && typeof feature.id === "string") {
+		return feature.id;
+	}
+	if (field === "name") {
+		const props = feature.properties;
+		if (props && typeof props === "object" && "name" in props) {
+			return String((props as Record<string, unknown>).name ?? "");
+		}
+	}
+	return "";
+};
+
 export const runPoiFetch = async (options: PoiFetchOptions): Promise<void> => {
 	const tag = resolveTag({ tag: options.tag, preset: options.preset });
 	const bbox = await resolveWithinBbox(options.within);
@@ -61,26 +101,40 @@ export const runPoiFetch = async (options: PoiFetchOptions): Promise<void> => {
 		});
 	}
 
+	const sort = normalizeSort(options.sort);
+	const limit = parseLimit(options.limit);
+	let features = geojson.features;
+	if (sort) {
+		features = [...features].sort((a, b) => {
+			const left = extractSortKey(a, sort);
+			const right = extractSortKey(b, sort);
+			return left.localeCompare(right);
+		});
+	}
+	if (limit) {
+		features = features.slice(0, limit);
+	}
+
 	const format = options.format ?? "text";
 
 	if (format === "geojson" || format === "json") {
-		writeJson(geojson);
+		writeJson({ ...geojson, features });
 		return;
 	}
 
 	if (format === "text") {
-		for (const feature of geojson.features) {
+		for (const feature of features) {
 			writeText(formatFeatureText(feature));
 		}
 		return;
 	}
 
 	if (format === "jsonl" || format === "ndjson") {
-		for (const feature of geojson.features) {
+		for (const feature of features) {
 			writeJson(feature);
 		}
 		return;
 	}
 
-	writeJson(geojson);
+	writeJson({ ...geojson, features });
 };

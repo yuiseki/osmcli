@@ -28,7 +28,14 @@ const server = setupServer(
 					id: 1,
 					lat: 35.7,
 					lon: 139.7,
-					tags: { name: "Cafe" },
+					tags: { name: "B Cafe" },
+				},
+				{
+					type: "node",
+					id: 2,
+					lat: 35.71,
+					lon: 139.71,
+					tags: { name: "A Cafe" },
 				},
 			],
 		}),
@@ -54,6 +61,24 @@ describe("runPoiFetch", () => {
 
 		await runPoiFetch({ within: "東京都台東区", preset: "cafe" });
 
-		expect(stdout).toHaveBeenCalledWith("Cafe\t35.7,139.7\n");
+		expect(stdout).toHaveBeenCalledWith("B Cafe\t35.7,139.7\n");
+	});
+
+	it("applies limit and sort", async () => {
+		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
+		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
+		const stdout = vi
+			.spyOn(process.stdout, "write")
+			.mockImplementation(() => true);
+
+		await runPoiFetch({
+			within: "東京都台東区",
+			tag: "amenity=cafe",
+			sort: "name",
+			limit: "1",
+		});
+
+		expect(stdout).toHaveBeenCalledTimes(1);
+		expect(stdout).toHaveBeenCalledWith("A Cafe\t35.71,139.71\n");
 	});
 });
