@@ -26,7 +26,27 @@ const server = setupServer(
 	}),
 	http.get("https://valhalla.test/route", () =>
 		HttpResponse.json({
-			trip: { summary: { length: 5.2, time: 900 } },
+			trip: {
+				summary: { length: 5.2, time: 900 },
+				legs: [
+					{
+						maneuvers: [
+							{
+								instruction: "Head north on Main St.",
+								verbal_post_transition_instruction: "Continue for 200 meters.",
+								length: 0.2,
+								time: 60,
+							},
+							{
+								instruction: "Turn right onto 2nd Ave.",
+								verbal_post_transition_instruction: "Continue for 300 meters.",
+								length: 0.3,
+								time: 120,
+							},
+						],
+					},
+				],
+			},
 		}),
 	),
 );
@@ -50,6 +70,18 @@ describe("runRoute", () => {
 
 		await runRoute({ from: "東京駅", to: "浅草寺", mode: "pedestrian" });
 
-		expect(stdout).toHaveBeenCalledWith("5.2,900\n");
+		expect(stdout).toHaveBeenCalledWith("from: 東京駅\n");
+		expect(stdout).toHaveBeenCalledWith("to: 浅草寺\n");
+		expect(stdout).toHaveBeenCalledWith("distance_km: 5.2\n");
+		expect(stdout).toHaveBeenCalledWith("time_min: 15\n");
+		expect(stdout).toHaveBeenCalledWith("steps:\n");
+		expect(stdout).toHaveBeenCalledWith(
+			"- Head north on Main St. (0.2 km) (1 min)\n",
+		);
+		expect(stdout).toHaveBeenCalledWith("  Continue for 200 meters.\n");
+		expect(stdout).toHaveBeenCalledWith(
+			"- Turn right onto 2nd Ave. (0.3 km) (2 min)\n",
+		);
+		expect(stdout).toHaveBeenCalledWith("  Continue for 300 meters.\n");
 	});
 });
