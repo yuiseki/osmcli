@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import "dotenv/config";
 import { Command } from "commander";
+import { runAoiResolve } from "./commands/aoi.js";
 import { runGeocode } from "./commands/geocode.js";
 import { runReverse } from "./commands/reverse.js";
 import { OsmableError } from "./domain/errors.js";
@@ -64,8 +65,8 @@ withFormat(
 	aoi
 		.command("resolve")
 		.argument("<query>", "place name")
-		.action(() => {
-			notImplemented("aoi resolve");
+		.action(async (query, options) => {
+			await runAoiResolve(query, options);
 		}),
 	"geojson",
 );
