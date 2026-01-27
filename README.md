@@ -8,6 +8,7 @@ Status: scaffolded per PRD/ADR. Commands are stubbed and return "not implemented
 
 - Requires Node.js 22+ (ADR-0001)
 - Run: `npm install`
+- First time: `cp .env.example .env`
 - Dev: `npm run dev -- --help`
 
 ## CLI (planned)

@@ -7,3 +7,5 @@ npm-debug.log*
 .pnpm-debug.log*
 .vscode/*
 !.vscode/settings.json
+
+.env
