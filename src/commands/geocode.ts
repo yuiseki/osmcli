@@ -105,7 +105,7 @@ export const runGeocode = async (
 	}
 
 	const wantsAll = Boolean(options.all);
-	const format = options.format ?? "json";
+	const format = options.format ?? "text";
 
 	if (wantsAll) {
 		if (format === "text") {
