@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 describe("runPoiCount", () => {
-	it("prints json count by default", async () => {
+	it("prints text count by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
 		const stdout = vi
@@ -52,6 +52,6 @@ describe("runPoiCount", () => {
 
 		await runPoiCount({ within: "東京都台東区", preset: "cafe" });
 
-		expect(stdout).toHaveBeenCalledWith('{"count":3}\n');
+		expect(stdout).toHaveBeenCalledWith("3\n");
 	});
 });

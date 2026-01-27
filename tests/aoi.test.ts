@@ -52,7 +52,7 @@ afterEach(() => {
 });
 
 describe("runAoiResolve", () => {
-	it("prints geojson feature by default", async () => {
+	it("prints text output by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		const stdout = vi
 			.spyOn(process.stdout, "write")
@@ -61,20 +61,20 @@ describe("runAoiResolve", () => {
 		await runAoiResolve("東京都台東区", {});
 
 		expect(stdout).toHaveBeenCalledWith(
-			'{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[139.7,35.6],[139.8,35.6],[139.8,35.8],[139.7,35.8],[139.7,35.6]]]},"properties":{"name":"台東区, 東京都, 日本","source":"nominatim","place_id":1,"osm_type":"relation","osm_id":2,"boundingbox":["35.6","35.8","139.7","139.8"]}}\n',
+			"address: 台東区, 東京都, 日本\nbbox: 35.6,139.7,35.8,139.8\n",
 		);
 	});
 
-	it("prints json when format is json", async () => {
+	it("prints geojson when format is geojson", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		const stdout = vi
 			.spyOn(process.stdout, "write")
 			.mockImplementation(() => true);
 
-		await runAoiResolve("東京都台東区", { format: "json" });
+		await runAoiResolve("東京都台東区", { format: "geojson" });
 
 		expect(stdout).toHaveBeenCalledWith(
-			'{"place_id":1,"osm_type":"relation","osm_id":2,"display_name":"台東区, 東京都, 日本","boundingbox":["35.6","35.8","139.7","139.8"],"geojson":{"type":"Polygon","coordinates":[[[139.7,35.6],[139.8,35.6],[139.8,35.8],[139.7,35.8],[139.7,35.6]]]}}\n',
+			'{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[139.7,35.6],[139.8,35.6],[139.8,35.8],[139.7,35.8],[139.7,35.6]]]},"properties":{"name":"台東区, 東京都, 日本","source":"nominatim","place_id":1,"osm_type":"relation","osm_id":2,"boundingbox":["35.6","35.8","139.7","139.8"]}}\n',
 		);
 	});
 });

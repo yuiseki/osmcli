@@ -41,7 +41,7 @@ afterEach(() => {
 });
 
 describe("runRoute", () => {
-	it("prints json output by default", async () => {
+	it("prints text output by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_VALHALLA_HOST = "https://valhalla.test";
 		const stdout = vi
@@ -50,8 +50,6 @@ describe("runRoute", () => {
 
 		await runRoute({ from: "東京駅", to: "浅草寺", mode: "pedestrian" });
 
-		expect(stdout).toHaveBeenCalledWith(
-			'{"trip":{"summary":{"length":5.2,"time":900}}}\n',
-		);
+		expect(stdout).toHaveBeenCalledWith("5.2,900\n");
 	});
 });

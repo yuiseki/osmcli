@@ -45,7 +45,7 @@ afterEach(() => {
 });
 
 describe("runPoiFetch", () => {
-	it("prints jsonl output by default", async () => {
+	it("prints text output by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
 		const stdout = vi
@@ -54,8 +54,6 @@ describe("runPoiFetch", () => {
 
 		await runPoiFetch({ within: "東京都台東区", preset: "cafe" });
 
-		expect(stdout).toHaveBeenCalledWith(
-			'{"type":"Feature","id":"node/1","properties":{"id":"node/1","name":"Cafe"},"geometry":{"type":"Point","coordinates":[139.7,35.7]}}\n',
-		);
+		expect(stdout).toHaveBeenCalledWith("Cafe\t35.7,139.7\n");
 	});
 });

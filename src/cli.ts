@@ -73,7 +73,7 @@ withFormat(
 		.action(async (query, options) => {
 			await runAoiResolve(query, options);
 		}),
-	"geojson",
+	"text",
 );
 
 const poi = program.command("poi").description("POI operations");
@@ -86,7 +86,7 @@ withFormat(
 		.action(async (options) => {
 			await runPoiCount(options);
 		}),
-	"json",
+	"text",
 );
 
 withFormat(
@@ -98,7 +98,7 @@ withFormat(
 		.action(async (options) => {
 			await runPoiFetch(options);
 		}),
-	"jsonl",
+	"text",
 );
 
 withFormat(
@@ -110,7 +110,7 @@ withFormat(
 		.action(async (options) => {
 			await runRoute(options);
 		}),
-	"json",
+	"text",
 );
 
 withFormat(
@@ -122,17 +122,17 @@ withFormat(
 		.action(async (options) => {
 			await runIsochrone(options);
 		}),
-	"geojson",
+	"text",
 );
 
 withFormat(
 	program
 		.command("doctor")
 		.description("check upstream endpoints")
-		.action(async () => {
-			await runDoctor();
+		.action(async (options) => {
+			await runDoctor(options);
 		}),
-	"json",
+	"text",
 );
 
 program.on("option:verbose", () => {

@@ -21,6 +21,32 @@ type GeoJsonFeatureCollection = {
 	features: Array<Record<string, unknown>>;
 };
 
+const formatFeatureText = (feature: Record<string, unknown>): string => {
+	const name =
+		typeof feature.properties === "object" &&
+		feature.properties &&
+		"name" in feature.properties
+			? String((feature.properties as Record<string, unknown>).name ?? "")
+			: "";
+	const id = typeof feature.id === "string" ? feature.id : "";
+	const label = name || id || "unknown";
+	const geometry =
+		typeof feature.geometry === "object" && feature.geometry
+			? (feature.geometry as { type?: string; coordinates?: unknown })
+			: undefined;
+	if (
+		geometry?.type === "Point" &&
+		Array.isArray(geometry.coordinates) &&
+		geometry.coordinates.length >= 2
+	) {
+		const [lon, lat] = geometry.coordinates as [number, number];
+		if (Number.isFinite(lat) && Number.isFinite(lon)) {
+			return `${label}\t${lat},${lon}`;
+		}
+	}
+	return label;
+};
+
 export const runPoiFetch = async (options: PoiFetchOptions): Promise<void> => {
 	const tag = resolveTag({ tag: options.tag, preset: options.preset });
 	const bbox = await resolveWithinBbox(options.within);
@@ -35,7 +61,7 @@ export const runPoiFetch = async (options: PoiFetchOptions): Promise<void> => {
 		});
 	}
 
-	const format = options.format ?? "jsonl";
+	const format = options.format ?? "text";
 
 	if (format === "geojson" || format === "json") {
 		writeJson(geojson);
@@ -43,7 +69,9 @@ export const runPoiFetch = async (options: PoiFetchOptions): Promise<void> => {
 	}
 
 	if (format === "text") {
-		writeText(JSON.stringify(geojson));
+		for (const feature of geojson.features) {
+			writeText(formatFeatureText(feature));
+		}
 		return;
 	}
 

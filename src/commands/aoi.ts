@@ -66,10 +66,16 @@ export const runAoiResolve = async (
 	options: AoiResolveOptions,
 ): Promise<void> => {
 	const result = await fetchAoi(query);
-	const format = options.format ?? "geojson";
+	const format = options.format ?? "text";
 
 	if (format === "text") {
-		writeText(result.display_name ?? query);
+		const name = result.display_name ?? query;
+		if (result.boundingbox) {
+			const [south, north, west, east] = result.boundingbox;
+			writeText(`address: ${name}\nbbox: ${south},${west},${north},${east}`);
+			return;
+		}
+		writeText(`address: ${name}`);
 		return;
 	}
 

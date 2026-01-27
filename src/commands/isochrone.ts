@@ -9,6 +9,13 @@ export type IsochroneOptions = {
 	format?: string;
 };
 
+type IsochroneFeatureCollection = {
+	type: "FeatureCollection";
+	features?: Array<{
+		properties?: { time?: number };
+	}>;
+};
+
 const DEFAULT_HOST = "https://valhalla.yuiseki.net";
 
 const getHost = (): string => process.env.OSMABLE_VALHALLA_HOST ?? DEFAULT_HOST;
@@ -82,9 +89,19 @@ export const runIsochrone = async (
 	}
 
 	const data = (await response.json()) as unknown;
-	const format = options.format ?? "geojson";
+	const format = options.format ?? "text";
 
 	if (format === "text") {
+		const collection = data as IsochroneFeatureCollection;
+		if (collection.type === "FeatureCollection" && collection.features) {
+			for (const feature of collection.features) {
+				const time = feature.properties?.time;
+				if (typeof time === "number") {
+					writeText(`time: ${time}`);
+				}
+			}
+			return;
+		}
 		writeText(JSON.stringify(data));
 		return;
 	}

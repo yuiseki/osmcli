@@ -1,4 +1,4 @@
-import { writeJson } from "../io/output.js";
+import { writeJson, writeText } from "../io/output.js";
 
 type ProbeResult = {
 	ok: boolean;
@@ -47,7 +47,9 @@ const probe = async (
 	}
 };
 
-export const runDoctor = async (): Promise<void> => {
+export const runDoctor = async (options?: {
+	format?: string;
+}): Promise<void> => {
 	const nominatimHost = getHost(
 		"OSMABLE_NOMINATIM_HOST",
 		DEFAULT_NOMINATIM_HOST,
@@ -102,9 +104,26 @@ export const runDoctor = async (): Promise<void> => {
 		),
 	]);
 
-	writeJson({
-		nominatim,
-		overpass,
-		valhalla,
-	});
+	const format = options?.format ?? "text";
+
+	if (format === "text") {
+		writeText(
+			`nominatim ok=${nominatim.ok} status=${nominatim.status ?? "-"} ms=${
+				nominatim.ms ?? "-"
+			}`,
+		);
+		writeText(
+			`overpass ok=${overpass.ok} status=${overpass.status ?? "-"} ms=${
+				overpass.ms ?? "-"
+			}`,
+		);
+		writeText(
+			`valhalla ok=${valhalla.ok} status=${valhalla.status ?? "-"} ms=${
+				valhalla.ms ?? "-"
+			}`,
+		);
+		return;
+	}
+
+	writeJson({ nominatim, overpass, valhalla });
 };

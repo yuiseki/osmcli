@@ -81,7 +81,7 @@ export const runRoute = async (options: RouteOptions): Promise<void> => {
 	}
 
 	const data = (await response.json()) as ValhallaRouteResponse;
-	const format = options.format ?? "json";
+	const format = options.format ?? "text";
 
 	if (format === "text") {
 		const length = data.trip?.summary?.length;

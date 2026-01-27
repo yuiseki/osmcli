@@ -38,7 +38,7 @@ export const runPoiCount = async (options: PoiCountOptions): Promise<void> => {
 	const query = buildOverpassQuery({ tag, bbox, output: "count" });
 	const data = (await fetchOverpass(query)) as OverpassCountResponse;
 	const count = parseCount(data);
-	const format = options.format ?? "json";
+	const format = options.format ?? "text";
 
 	if (format === "text") {
 		writeText(String(count));

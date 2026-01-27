@@ -51,7 +51,7 @@ afterEach(() => {
 });
 
 describe("runIsochrone", () => {
-	it("prints geojson output by default", async () => {
+	it("prints text output by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_VALHALLA_HOST = "https://valhalla.test";
 		const stdout = vi
@@ -60,8 +60,6 @@ describe("runIsochrone", () => {
 
 		await runIsochrone({ from: "東京駅", minutes: "10", mode: "pedestrian" });
 
-		expect(stdout).toHaveBeenCalledWith(
-			'{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"time":10},"geometry":{"type":"Polygon","coordinates":[[[139.7,35.6],[139.8,35.6],[139.8,35.8],[139.7,35.8],[139.7,35.6]]]}}]}\n',
-		);
+		expect(stdout).toHaveBeenCalledWith("time: 10\n");
 	});
 });

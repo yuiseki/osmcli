@@ -34,7 +34,7 @@ afterEach(() => {
 });
 
 describe("runDoctor", () => {
-	it("prints status for upstream services", async () => {
+	it("prints text status for upstream services by default", async () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
 		process.env.OSMABLE_VALHALLA_HOST = "https://valhalla.test";
@@ -44,10 +44,9 @@ describe("runDoctor", () => {
 
 		await runDoctor();
 
-		const payload = stdout.mock.calls[0]?.[0] ?? "";
-		const data = JSON.parse(payload);
-		expect(data.nominatim.ok).toBe(true);
-		expect(data.overpass.ok).toBe(true);
-		expect(data.valhalla.ok).toBe(true);
+		const lines = stdout.mock.calls.map((call) => call[0]);
+		expect(lines[0]).toMatch(/^nominatim ok=true/);
+		expect(lines[1]).toMatch(/^overpass ok=true/);
+		expect(lines[2]).toMatch(/^valhalla ok=true/);
 	});
 });
