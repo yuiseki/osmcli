@@ -2,6 +2,7 @@
 import "dotenv/config";
 import { Command } from "commander";
 import { runAoiResolve } from "./commands/aoi.js";
+import { runDoctor } from "./commands/doctor.js";
 import { runGeocode } from "./commands/geocode.js";
 import { runIsochrone } from "./commands/isochrone.js";
 import { runPoiCount } from "./commands/poi-count.js";
@@ -128,8 +129,8 @@ withFormat(
 	program
 		.command("doctor")
 		.description("check upstream endpoints")
-		.action(() => {
-			notImplemented("doctor");
+		.action(async () => {
+			await runDoctor();
 		}),
 	"json",
 );
