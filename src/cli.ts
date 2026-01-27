@@ -3,6 +3,7 @@ import "dotenv/config";
 import { Command } from "commander";
 import { runAoiResolve } from "./commands/aoi.js";
 import { runGeocode } from "./commands/geocode.js";
+import { runPoiCount } from "./commands/poi-count.js";
 import { runReverse } from "./commands/reverse.js";
 import { OsmableError } from "./domain/errors.js";
 import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
@@ -78,8 +79,8 @@ withFormat(
 		.requiredOption("--within <within>", "place name, @file, or -")
 		.option("--tag <tag>", "OSM tag (key=value)")
 		.option("--preset <name>", "preset name")
-		.action(() => {
-			notImplemented("poi count");
+		.action(async (options) => {
+			await runPoiCount(options);
 		}),
 	"json",
 );
