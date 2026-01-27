@@ -1,0 +1,38 @@
+{
+	"name": "osmable",
+	"version": "0.1.0",
+	"description": "Agent-first OSM CLI for geocoding, AOI, POI, and routing",
+	"type": "module",
+	"license": "MIT",
+	"bin": {
+		"osmable": "dist/cli.js"
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"dev": "tsx src/cli.ts",
+		"build": "tsup",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "biome check .",
+		"format": "biome format . --write"
+	},
+	"dependencies": {
+		"cacache": "^18.0.4",
+		"commander": "^12.0.0",
+		"stream-json": "^1.9.0",
+		"undici": "^7.6.0",
+		"zod": "^3.24.1"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/node": "^22.10.7",
+		"execa": "^9.5.1",
+		"msw": "^2.4.9",
+		"tsup": "^8.4.0",
+		"tsx": "^4.19.2",
+		"typescript": "^5.7.3",
+		"vitest": "^2.1.8"
+	}
+}
