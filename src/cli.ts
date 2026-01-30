@@ -109,6 +109,7 @@ withFormat(
 		.requiredOption("--from <place>", "origin place name or lat,lon")
 		.requiredOption("--to <place>", "destination place name or lat,lon")
 		.option("--mode <mode>", "pedestrian | bicycle | car", "pedestrian")
+		.option("--with-steps", "include route steps in text output")
 		.action(async (options) => {
 			await runRoute(options);
 		}),

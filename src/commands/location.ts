@@ -41,31 +41,66 @@ const fetchNominatim = async (
 		});
 	}
 
-	const url = new URL("/search.php", host);
-	url.searchParams.set("q", query);
-	url.searchParams.set("format", "jsonv2");
-	url.searchParams.set("limit", "1");
+	const searchPaths = ["/search.php", "/search"];
+	for (const [index, path] of searchPaths.entries()) {
+		const url = new URL(path, host);
+		url.searchParams.set("q", query);
+		url.searchParams.set("format", "jsonv2");
+		url.searchParams.set("limit", "1");
 
-	const response = await fetch(url, {
-		headers: {
-			"User-Agent": "osmable/0.1.0 (cli)",
-		},
+		const response = await fetch(url, {
+			headers: {
+				"User-Agent": "osmable/0.1.0 (cli)",
+			},
+		});
+		if (!response.ok) {
+			if (
+				(response.status === 404 || response.status === 405) &&
+				index < searchPaths.length - 1
+			) {
+				continue;
+			}
+			throw new OsmableError({
+				code:
+					response.status >= 500 ? "UPSTREAM_TEMPORARY" : "UPSTREAM_PERMANENT",
+				message: `Nominatim error: ${response.status} ${response.statusText}`,
+			});
+		}
+
+		let data: unknown;
+		try {
+			data = (await response.json()) as unknown;
+		} catch (error) {
+			if (index < searchPaths.length - 1) {
+				continue;
+			}
+			throw new OsmableError({
+				code: "UPSTREAM_PERMANENT",
+				message: "Unexpected Nominatim response",
+			});
+		}
+		if (!Array.isArray(data)) {
+			if (index < searchPaths.length - 1) {
+				continue;
+			}
+			throw new OsmableError({
+				code: "UPSTREAM_PERMANENT",
+				message: "Unexpected Nominatim response",
+			});
+		}
+		if (data.length === 0) {
+			throw new OsmableError({
+				code: "NOT_FOUND",
+				message: "No results from Nominatim",
+			});
+		}
+		return data[0] as NominatimSearchResult;
+	}
+
+	throw new OsmableError({
+		code: "UPSTREAM_PERMANENT",
+		message: "Unexpected Nominatim response",
 	});
-	if (!response.ok) {
-		throw new OsmableError({
-			code:
-				response.status >= 500 ? "UPSTREAM_TEMPORARY" : "UPSTREAM_PERMANENT",
-			message: `Nominatim error: ${response.status} ${response.statusText}`,
-		});
-	}
-	const data = (await response.json()) as unknown;
-	if (!Array.isArray(data) || data.length === 0) {
-		throw new OsmableError({
-			code: "NOT_FOUND",
-			message: "No results from Nominatim",
-		});
-	}
-	return data[0] as NominatimSearchResult;
 };
 
 export const resolveLocation = async (

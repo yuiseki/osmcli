@@ -6,6 +6,7 @@ export type RouteOptions = {
 	from: string;
 	to: string;
 	mode: string;
+	withSteps?: boolean;
 	format?: string;
 };
 
@@ -108,29 +109,33 @@ export const runRoute = async (options: RouteOptions): Promise<void> => {
 		writeText(`to: ${toLabel}`);
 		writeText(`distance_km: ${length}`);
 		writeText(`time_min: ${minutes}`);
-		const maneuvers =
-			data.trip?.legs?.flatMap((leg) => leg.maneuvers ?? []) ?? [];
-		if (maneuvers.length > 0) {
-			writeText("steps:");
-			for (const maneuver of maneuvers) {
-				const primary =
-					maneuver.instruction ??
-					maneuver.verbal_pre_transition_instruction ??
-					"";
-				const post = maneuver.verbal_post_transition_instruction ?? "";
-				const distance =
-					typeof maneuver.length === "number" ? ` (${maneuver.length} km)` : "";
-				const duration =
-					typeof maneuver.time === "number"
-						? ` (${Math.round(maneuver.time / 60)} min)`
-						: "";
-				if (primary) {
-					writeText(
-						`- ${primary}${distance || duration ? `${distance}${duration}` : ""}`,
-					);
-				}
-				if (post) {
-					writeText(`  ${post}`);
+		if (options.withSteps) {
+			const maneuvers =
+				data.trip?.legs?.flatMap((leg) => leg.maneuvers ?? []) ?? [];
+			if (maneuvers.length > 0) {
+				writeText("steps:");
+				for (const maneuver of maneuvers) {
+					const primary =
+						maneuver.instruction ??
+						maneuver.verbal_pre_transition_instruction ??
+						"";
+					const post = maneuver.verbal_post_transition_instruction ?? "";
+					const distance =
+						typeof maneuver.length === "number"
+							? ` (${maneuver.length} km)`
+							: "";
+					const duration =
+						typeof maneuver.time === "number"
+							? ` (${Math.round(maneuver.time / 60)} min)`
+							: "";
+					if (primary) {
+						writeText(
+							`- ${primary}${distance || duration ? `${distance}${duration}` : ""}`,
+						);
+					}
+					if (post) {
+						writeText(`  ${post}`);
+					}
 				}
 			}
 		}
