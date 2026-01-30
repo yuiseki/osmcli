@@ -78,7 +78,7 @@ export const runTagSearch = async (
 		if (results.length === 0) {
 			throw new OsmableError({
 				code: "NOT_FOUND",
-				message: "No results from TagInfo",
+				message: "No results from TagInfo. Try to search in English.",
 			});
 		}
 
@@ -158,7 +158,7 @@ export const runTagSearch = async (
 	if (results.length === 0) {
 		throw new OsmableError({
 			code: "NOT_FOUND",
-			message: "No results from TagInfo",
+			message: "No results from TagInfo. Try to search in English.",
 		});
 	}
 

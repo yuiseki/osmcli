@@ -287,5 +287,29 @@ export const fetchOverpass = async (query: string): Promise<unknown> => {
 			message: `Overpass error: ${response.status} ${response.statusText}`,
 		});
 	}
-	return response.json();
+	const contentType = response.headers.get("content-type") ?? "";
+	if (!contentType.includes("application/json")) {
+		const body = await response.text();
+		const snippet = body.trim().slice(0, 200);
+		throw new OsmableError({
+			code: "UPSTREAM_PERMANENT",
+			message: "Overpass error: non-JSON response",
+			hints: {
+				note: "Upstream returned an HTML/XML error page; check server configuration. Retrying likely won't help.",
+			},
+			candidates: snippet ? [{ snippet }] : undefined,
+		});
+	}
+
+	try {
+		return await response.json();
+	} catch (error) {
+		throw new OsmableError({
+			code: "UPSTREAM_PERMANENT",
+			message: "Overpass error: invalid JSON response",
+			hints: {
+				note: "Upstream returned invalid JSON. This usually indicates a server-side error; retrying is unlikely to help.",
+			},
+		});
+	}
 };
