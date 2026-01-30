@@ -61,7 +61,7 @@ describe("runAoiResolve", () => {
 		await runAoiResolve("東京都台東区", {});
 
 		expect(stdout).toHaveBeenCalledWith(
-			"address: 台東区, 東京都, 日本\nbbox: 35.6,139.7,35.8,139.8\n",
+			"address: 台東区, 東京都, 日本\nbbox: 35.6,139.7,35.8,139.8\narea_km: 200.818\n",
 		);
 	});
 

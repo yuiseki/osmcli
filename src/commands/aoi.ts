@@ -1,3 +1,5 @@
+import area from "@turf/area";
+
 import { OsmableError } from "../domain/errors.js";
 import { writeJson, writeText } from "../io/output.js";
 
@@ -16,6 +18,8 @@ type NominatimSearchResult = {
 export type AoiResolveOptions = {
 	format?: string;
 };
+
+type AreaInput = Parameters<typeof area>[0];
 
 const DEFAULT_HOST = "https://nominatim.yuiseki.net";
 
@@ -70,12 +74,22 @@ export const runAoiResolve = async (
 
 	if (format === "text") {
 		const name = result.display_name ?? query;
+		const lines = [`address: ${name}`];
 		if (result.boundingbox) {
 			const [south, north, west, east] = result.boundingbox;
-			writeText(`address: ${name}\nbbox: ${south},${west},${north},${east}`);
-			return;
+			lines.push(`bbox: ${south},${west},${north},${east}`);
 		}
-		writeText(`address: ${name}`);
+		if (result.geojson) {
+			try {
+				const km2 = area(result.geojson as AreaInput) / 1_000_000;
+				if (Number.isFinite(km2)) {
+					lines.push(`area_km: ${km2.toFixed(3)}`);
+				}
+			} catch (error) {
+				// Ignore invalid geometry for text output.
+			}
+		}
+		writeText(lines.join("\n"));
 		return;
 	}
 
