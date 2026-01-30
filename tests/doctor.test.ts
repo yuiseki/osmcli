@@ -22,6 +22,9 @@ const server = setupServer(
 	http.get("https://valhalla.test/route", () =>
 		HttpResponse.json({ trip: { summary: { length: 0.1, time: 10 } } }),
 	),
+	http.get("https://taginfo.test/api/4/site/info", () =>
+		HttpResponse.json({ data: { version: "test" } }),
+	),
 );
 
 afterAll(() => server.close());
@@ -38,6 +41,7 @@ describe("runDoctor", () => {
 		process.env.OSMABLE_NOMINATIM_HOST = "https://nominatim.test";
 		process.env.OSMABLE_OVERPASS_HOST = "https://overpass.test";
 		process.env.OSMABLE_VALHALLA_HOST = "https://valhalla.test";
+		process.env.OSMABLE_TAGINFO_HOST = "https://taginfo.test";
 		const stdout = vi
 			.spyOn(process.stdout, "write")
 			.mockImplementation(() => true);
@@ -48,5 +52,6 @@ describe("runDoctor", () => {
 		expect(lines[0]).toMatch(/^nominatim ok=true/);
 		expect(lines[1]).toMatch(/^overpass ok=true/);
 		expect(lines[2]).toMatch(/^valhalla ok=true/);
+		expect(lines[3]).toMatch(/^taginfo ok=true/);
 	});
 });

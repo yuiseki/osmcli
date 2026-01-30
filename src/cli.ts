@@ -9,6 +9,8 @@ import { runPoiCount } from "./commands/poi-count.js";
 import { runPoiFetch } from "./commands/poi-fetch.js";
 import { runReverse } from "./commands/reverse.js";
 import { runRoute } from "./commands/route.js";
+import { runTagInfo } from "./commands/tag-info.js";
+import { runTagSearch } from "./commands/tag-search.js";
 import { OsmableError } from "./domain/errors.js";
 import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
 
@@ -99,6 +101,32 @@ withFormat(
 		.option("--sort <field>", "name | id")
 		.action(async (options) => {
 			await runPoiFetch(options);
+		}),
+	"text",
+);
+
+const tag = program.command("tag").description("TagInfo operations");
+withFormat(
+	tag
+		.command("search")
+		.argument("<query>", "keyword")
+		.option("--limit <number>", "results per page", "10")
+		.option("--page <number>", "page number", "1")
+		.option("--key <key>", "OSM key for key/values lookup")
+		.action(async (query, options) => {
+			await runTagSearch(query, options);
+		}),
+	"text",
+);
+
+withFormat(
+	tag
+		.command("info")
+		.argument("<tag>", "OSM tag (key=value)")
+		.option("--lang <lang>", "preferred language for descriptions")
+		.option("--linked-all", "show all linked items")
+		.action(async (tagValue, options) => {
+			await runTagInfo(tagValue, options);
 		}),
 	"text",
 );

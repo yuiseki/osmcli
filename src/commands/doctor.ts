@@ -10,6 +10,7 @@ type ProbeResult = {
 const DEFAULT_NOMINATIM_HOST = "https://nominatim.yuiseki.net";
 const DEFAULT_OVERPASS_HOST = "https://overpass.yuiseki.net";
 const DEFAULT_VALHALLA_HOST = "https://valhalla.yuiseki.net";
+const DEFAULT_TAGINFO_HOST = "https://taginfo.yuiseki.net";
 
 const getHost = (envKey: string, fallback: string): string =>
 	process.env[envKey] ?? fallback;
@@ -56,8 +57,9 @@ export const runDoctor = async (options?: {
 	);
 	const overpassHost = getHost("OSMABLE_OVERPASS_HOST", DEFAULT_OVERPASS_HOST);
 	const valhallaHost = getHost("OSMABLE_VALHALLA_HOST", DEFAULT_VALHALLA_HOST);
+	const taginfoHost = getHost("OSMABLE_TAGINFO_HOST", DEFAULT_TAGINFO_HOST);
 
-	const [nominatim, overpass, valhalla] = await Promise.all([
+	const [nominatim, overpass, valhalla, taginfo] = await Promise.all([
 		probe(
 			"nominatim",
 			() => {
@@ -102,6 +104,10 @@ export const runDoctor = async (options?: {
 				headers: { "User-Agent": "osmable/0.1.0 (cli)" },
 			},
 		),
+		probe("taginfo", () => new URL("/api/4/site/info", taginfoHost), {
+			method: "GET",
+			headers: { "User-Agent": "osmable/0.1.0 (cli)" },
+		}),
 	]);
 
 	const format = options?.format ?? "text";
@@ -122,8 +128,13 @@ export const runDoctor = async (options?: {
 				valhalla.ms ?? "-"
 			}`,
 		);
+		writeText(
+			`taginfo ok=${taginfo.ok} status=${taginfo.status ?? "-"} ms=${
+				taginfo.ms ?? "-"
+			}`,
+		);
 		return;
 	}
 
-	writeJson({ nominatim, overpass, valhalla });
+	writeJson({ nominatim, overpass, valhalla, taginfo });
 };

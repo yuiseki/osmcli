@@ -14,6 +14,7 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 - `geocode`, `reverse`
 - `aoi resolve`
 - `poi count`, `poi fetch`
+- `tag search`, `tag info`
 - `route`, `isochrone`
 - `doctor`
 
@@ -34,6 +35,12 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 - POI fetch:
   - `osmable poi fetch --tag amenity=cafe --within "東京都台東区"`
   - `osmable poi fetch --tag amenity=cafe --within "東京都台東区" --format geojson`
+- Tag search:
+  - `osmable tag search "cafe"`
+  - `osmable tag search "amenity" --limit 20`
+- Tag info:
+  - `osmable tag info "amenity=cafe"`
+  - `osmable tag info "shop=convenience" --lang ja`
 - Route:
   - `osmable route --from "東京駅" --to "浅草寺"`
   - `osmable route --from "東京駅" --to "浅草寺" --mode bicycle --format json`
