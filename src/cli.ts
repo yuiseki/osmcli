@@ -67,7 +67,33 @@ withFormat(
 	"text",
 );
 
+const tag = program.command("tag").description("TagInfo operations");
 const aoi = program.command("aoi").description("AOI operations");
+withFormat(
+	tag
+		.command("search")
+		.argument("<query>", "keyword")
+		.option("--limit <number>", "results per page", "10")
+		.option("--page <number>", "page number", "1")
+		.option("--key <key>", "OSM key for key/values lookup")
+		.action(async (query, options) => {
+			await runTagSearch(query, options);
+		}),
+	"text",
+);
+
+withFormat(
+	tag
+		.command("info")
+		.argument("<tag>", "OSM tag (key=value)")
+		.option("--lang <lang>", "preferred language for descriptions")
+		.option("--linked-all", "show all linked items")
+		.action(async (tagValue, options) => {
+			await runTagInfo(tagValue, options);
+		}),
+	"text",
+);
+
 withFormat(
 	aoi
 		.command("resolve")
@@ -101,32 +127,6 @@ withFormat(
 		.option("--sort <field>", "name | id")
 		.action(async (options) => {
 			await runPoiFetch(options);
-		}),
-	"text",
-);
-
-const tag = program.command("tag").description("TagInfo operations");
-withFormat(
-	tag
-		.command("search")
-		.argument("<query>", "keyword")
-		.option("--limit <number>", "results per page", "10")
-		.option("--page <number>", "page number", "1")
-		.option("--key <key>", "OSM key for key/values lookup")
-		.action(async (query, options) => {
-			await runTagSearch(query, options);
-		}),
-	"text",
-);
-
-withFormat(
-	tag
-		.command("info")
-		.argument("<tag>", "OSM tag (key=value)")
-		.option("--lang <lang>", "preferred language for descriptions")
-		.option("--linked-all", "show all linked items")
-		.action(async (tagValue, options) => {
-			await runTagInfo(tagValue, options);
 		}),
 	"text",
 );

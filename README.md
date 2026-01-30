@@ -12,9 +12,9 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 ## CLI
 
 - `geocode`, `reverse`
+- `tag search`, `tag info`
 - `aoi resolve`
 - `poi count`, `poi fetch`
-- `tag search`, `tag info`
 - `route`, `isochrone`
 - `doctor`
 
@@ -26,6 +26,13 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 - Reverse geocode:
   - `osmable reverse --lat 35.7125805 --lon 139.7800712`
   - `osmable reverse --lat 35.7125805 --lon 139.7800712 --format json`
+- Tag search:
+  - `osmable tag search "cafe"`
+  - `osmable tag search "amenity" --limit 20`
+  - `osmable tag search "ramen" --key cuisine`
+- Tag info:
+  - `osmable tag info "amenity=cafe"`
+  - `osmable tag info "shop=convenience" --lang ja`
 - AOI resolve:
   - `osmable aoi resolve "東京都台東区"`
   - `osmable aoi resolve "東京都台東区" --format geojson`
@@ -35,12 +42,6 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 - POI fetch:
   - `osmable poi fetch --tag amenity=cafe --within "東京都台東区"`
   - `osmable poi fetch --tag amenity=cafe --within "東京都台東区" --format geojson`
-- Tag search:
-  - `osmable tag search "cafe"`
-  - `osmable tag search "amenity" --limit 20`
-- Tag info:
-  - `osmable tag info "amenity=cafe"`
-  - `osmable tag info "shop=convenience" --lang ja`
 - Route:
   - `osmable route --from "東京駅" --to "浅草寺"`
   - `osmable route --from "東京駅" --to "浅草寺" --mode bicycle --format json`
