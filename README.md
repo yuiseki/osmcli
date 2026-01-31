@@ -18,6 +18,11 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 - `route`, `isochrone`
 - `doctor`
 
+### Output format
+
+Default output format is `text`. Text output is concise and keeps context minimal.
+Use `--format json` when you need details that are not available in text output or when you want to extract specific fields with tools like `jq`.
+
 ## Examples
 
 - Geocode:

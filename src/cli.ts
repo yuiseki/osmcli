@@ -26,7 +26,7 @@ program
 const withFormat = (cmd: Command, defaultFormat: OutputFormat) =>
 	cmd.option(
 		"--format <format>",
-		"json | geojson | jsonl | ndjson | text",
+		"output format (default: text). text is concise; use json for details or jq",
 		defaultFormat,
 	);
 
