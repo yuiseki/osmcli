@@ -9,3 +9,5 @@ npm-debug.log*
 !.vscode/settings.json
 
 .env
+
+tmp/
