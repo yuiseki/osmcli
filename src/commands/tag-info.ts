@@ -5,6 +5,8 @@ import { buildTagInfoUrl, fetchTagInfo } from "./tag-shared.js";
 export type TagInfoOptions = {
 	lang?: string;
 	linkedAll?: boolean;
+	combinationAll?: boolean;
+	descAll?: boolean;
 	format?: string;
 };
 
@@ -61,6 +63,7 @@ const buildText = (params: {
 	relations: { implies: string[]; combination: string[]; linked: string[] };
 	usage: Array<{ type: string; count: number }>;
 	showAllLinked: boolean;
+	showAllCombination: boolean;
 }): string => {
 	const lines: string[] = [];
 	const pushSection = (title: string, body: () => void) => {
@@ -95,11 +98,20 @@ const buildText = (params: {
 	};
 	pushSection("Relations", () => {
 		renderRelationGroup("Implies", implies);
-		renderRelationGroup("Combination", combination);
-		if (params.showAllLinked || linked.length <= 20) {
+		if (params.showAllCombination || combination.length <= 5) {
+			renderRelationGroup("Combination", combination);
+		} else {
+			const truncated = combination.slice(0, 5);
+			renderRelationGroup("Combination", truncated);
+			lines.push(`- ... (total ${combination.length} items)`);
+			lines.push(
+				"- Tips: use --combination-all option to see all combination items",
+			);
+		}
+		if (params.showAllLinked || linked.length <= 5) {
 			renderRelationGroup("Linked", linked);
 		} else {
-			const truncated = linked.slice(0, 20);
+			const truncated = linked.slice(0, 5);
 			renderRelationGroup("Linked", truncated);
 			lines.push(`- ... (total ${linked.length} items)`);
 			lines.push("- Tips: use --linked-all option to see all linked items");
@@ -201,8 +213,15 @@ export const runTagInfo = async (
 	const relations = collectRelations(wikiPages.data);
 	const usage = normalizeUsage(stats.data);
 
-	const langOrder = options.lang ? [options.lang, "ja", "en"] : ["ja", "en"];
-	const orderedDescriptions = orderByPreferredLang(descriptions, langOrder);
+	const langOrder = options.lang ? [options.lang, "en", "ja"] : ["en", "ja"];
+	const langFilter = options.descAll ? null : new Set(["ja", "en"]);
+	const visibleDescriptions = langFilter
+		? descriptions.filter((entry) => langFilter.has(entry.lang))
+		: descriptions;
+	const orderedDescriptions = orderByPreferredLang(
+		visibleDescriptions,
+		langOrder,
+	);
 
 	const format = options.format ?? "text";
 	if (format === "text") {
@@ -213,6 +232,7 @@ export const runTagInfo = async (
 				relations,
 				usage,
 				showAllLinked: Boolean(options.linkedAll),
+				showAllCombination: Boolean(options.combinationAll),
 			}),
 		);
 		return;

@@ -87,6 +87,8 @@ withFormat(
 		.command("info")
 		.argument("<tag>", "OSM tag (key=value)")
 		.option("--lang <lang>", "preferred language for descriptions")
+		.option("--desc-all", "show descriptions in all languages")
+		.option("--combination-all", "show all combination items")
 		.option("--linked-all", "show all linked items")
 		.action(async (tagValue, options) => {
 			await runTagInfo(tagValue, options);
