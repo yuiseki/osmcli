@@ -87,8 +87,9 @@ const fetchResults = async (url: URL): Promise<NominatimResult[]> => {
 
 const formatText = (result: NominatimResult): string => {
 	const name = result.display_name ?? "";
-	if (!name) return `${result.lat},${result.lon}`;
-	return `address: ${name}\n${result.lat},${result.lon}`;
+	const coordinateLine = `GPS coordinate: ${result.lat},${result.lon}`;
+	if (!name) return coordinateLine;
+	return `address: ${name}\n${coordinateLine}`;
 };
 
 export const runGeocode = async (

@@ -48,7 +48,7 @@ describe("runGeocode", () => {
 		await runGeocode("東京都台東区", { limit: "1" });
 
 		expect(stdout).toHaveBeenCalledWith(
-			"address: 台東区, 東京都, 日本\n35.7125805,139.7800712\n",
+			"address: 台東区, 東京都, 日本\nGPS coordinate: 35.7125805,139.7800712\n",
 		);
 	});
 
