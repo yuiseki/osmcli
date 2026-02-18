@@ -1,11 +1,11 @@
 {
-	"name": "osmable",
+	"name": "osmcli",
 	"version": "0.1.0",
 	"description": "Agent-first OSM CLI for geocoding, AOI, POI, and routing",
 	"type": "module",
 	"license": "MIT",
 	"bin": {
-		"osmable": "dist/cli.js"
+		"osmcli": "dist/cli.js"
 	},
 	"engines": {
 		"node": ">=22"

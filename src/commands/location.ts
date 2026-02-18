@@ -50,7 +50,7 @@ const fetchNominatim = async (
 
 		const response = await fetch(url, {
 			headers: {
-				"User-Agent": "osmable/0.1.0 (cli)",
+				"User-Agent": "osmcli/0.1.0 (cli)",
 			},
 		});
 		if (!response.ok) {

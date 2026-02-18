@@ -28,7 +28,7 @@ export const buildTagInfoUrl = (
 export const fetchTagInfo = async (url: URL): Promise<unknown> => {
 	const response = await fetch(url, {
 		headers: {
-			"User-Agent": "osmable/0.1.0 (cli)",
+			"User-Agent": "osmcli/0.1.0 (cli)",
 		},
 	});
 	if (!response.ok) {

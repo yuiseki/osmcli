@@ -1,4 +1,4 @@
-# osmable
+# osmcli
 
 Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 
@@ -13,25 +13,25 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 
 - `npm run build`
 - `npm link`
-- `which osmable`
-- `osmable --help`
+- `which osmcli`
+- `osmcli --help`
 
 ## CLI
 
 - geocoding
-  - `osmable geocode`
-  - `osmable reverse`
+  - `osmcli geocode`
+  - `osmcli reverse`
 - tags
-  - `osmable tag search`
-  - `osmable tag info`
+  - `osmcli tag search`
+  - `osmcli tag info`
 - AOI
-  - `osmable aoi resolve`
+  - `osmcli aoi resolve`
 - POI
-  - `osmable poi count`
-  - `osmable poi fetch`
+  - `osmcli poi count`
+  - `osmcli poi fetch`
 - routing
-  - `osmable route`
-  - `osmable isochrone`
+  - `osmcli route`
+  - `osmcli isochrone`
 - others
   - `doctor`
 
@@ -44,32 +44,32 @@ Use `--format json` when you need details that are not available in text output 
 ## Examples
 
 - Geocode:
-  - `osmable geocode "東京都台東区"`
-  - `osmable geocode "東京都台東区" --format json`
+  - `osmcli geocode "東京都台東区"`
+  - `osmcli geocode "東京都台東区" --format json`
 - Reverse geocode:
-  - `osmable reverse --lat 35.7125805 --lon 139.7800712`
-  - `osmable reverse --lat 35.7125805 --lon 139.7800712 --format json`
+  - `osmcli reverse --lat 35.7125805 --lon 139.7800712`
+  - `osmcli reverse --lat 35.7125805 --lon 139.7800712 --format json`
 - Tag search:
-  - `osmable tag search "cafe"`
-  - `osmable tag search "amenity" --limit 20`
-  - `osmable tag search "ramen" --key cuisine`
+  - `osmcli tag search "cafe"`
+  - `osmcli tag search "amenity" --limit 20`
+  - `osmcli tag search "ramen" --key cuisine`
 - Tag info:
-  - `osmable tag info "amenity=cafe"`
-  - `osmable tag info "shop=convenience" --lang ja`
+  - `osmcli tag info "amenity=cafe"`
+  - `osmcli tag info "shop=convenience" --lang ja`
 - AOI resolve:
-  - `osmable aoi resolve "東京都台東区"`
-  - `osmable aoi resolve "東京都台東区" --format geojson`
+  - `osmcli aoi resolve "東京都台東区"`
+  - `osmcli aoi resolve "東京都台東区" --format geojson`
 - POI count:
-  - `osmable poi count --tag amenity=cafe --within "東京都台東区"`
-  - `osmable poi count --tag amenity=cafe --within @aoi.geojson --format json`
+  - `osmcli poi count --tag amenity=cafe --within "東京都台東区"`
+  - `osmcli poi count --tag amenity=cafe --within @aoi.geojson --format json`
 - POI fetch:
-  - `osmable poi fetch --tag amenity=cafe --within "東京都台東区"`
-  - `osmable poi fetch --tag amenity=cafe --within "東京都台東区" --format geojson`
+  - `osmcli poi fetch --tag amenity=cafe --within "東京都台東区"`
+  - `osmcli poi fetch --tag amenity=cafe --within "東京都台東区" --format geojson`
 - Route:
-  - `osmable route --from "東京駅" --to "浅草寺"`
-  - `osmable route --from "東京駅" --to "浅草寺" --mode bicycle --format json`
+  - `osmcli route --from "東京駅" --to "浅草寺"`
+  - `osmcli route --from "東京駅" --to "浅草寺" --mode bicycle --format json`
 - Isochrone:
-  - `osmable isochrone --from "東京駅" --minutes 10,20`
-  - `osmable isochrone --from "東京駅" --minutes 10,20 --format geojson`
+  - `osmcli isochrone --from "東京駅" --minutes 10,20`
+  - `osmcli isochrone --from "東京駅" --minutes 10,20 --format geojson`
 - Doctor:
-  - `osmable doctor`
+  - `osmcli doctor`

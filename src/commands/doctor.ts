@@ -71,14 +71,14 @@ export const runDoctor = async (options?: {
 			},
 			{
 				method: "GET",
-				headers: { "User-Agent": "osmable/0.1.0 (cli)" },
+				headers: { "User-Agent": "osmcli/0.1.0 (cli)" },
 			},
 		),
 		probe("overpass", () => new URL("/api/interpreter", overpassHost), {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-				"User-Agent": "osmable/0.1.0 (cli)",
+				"User-Agent": "osmcli/0.1.0 (cli)",
 			},
 			body: new URLSearchParams({ data: "[out:json];node(0);out;" }),
 		}),
@@ -101,12 +101,12 @@ export const runDoctor = async (options?: {
 			},
 			{
 				method: "GET",
-				headers: { "User-Agent": "osmable/0.1.0 (cli)" },
+				headers: { "User-Agent": "osmcli/0.1.0 (cli)" },
 			},
 		),
 		probe("taginfo", () => new URL("/api/4/site/info", taginfoHost), {
 			method: "GET",
-			headers: { "User-Agent": "osmable/0.1.0 (cli)" },
+			headers: { "User-Agent": "osmcli/0.1.0 (cli)" },
 		}),
 	]);
 

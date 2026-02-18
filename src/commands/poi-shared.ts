@@ -192,7 +192,7 @@ const fetchNominatimBbox = async (query: string): Promise<Bbox> => {
 
 	const response = await fetch(url, {
 		headers: {
-			"User-Agent": "osmable/0.1.0 (cli)",
+			"User-Agent": "osmcli/0.1.0 (cli)",
 		},
 	});
 	if (!response.ok) {
@@ -276,7 +276,7 @@ export const fetchOverpass = async (query: string): Promise<unknown> => {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-			"User-Agent": "osmable/0.1.0 (cli)",
+			"User-Agent": "osmcli/0.1.0 (cli)",
 		},
 		body: new URLSearchParams({ data: query }),
 	});

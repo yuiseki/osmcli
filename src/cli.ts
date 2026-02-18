@@ -17,7 +17,7 @@ import { type OutputFormat, handleError, writeErrorLog } from "./io/output.js";
 const program = new Command();
 
 program
-	.name("osmable")
+	.name("osmcli")
 	.description("Agent-first OSM CLI for geocoding, AOI, POI, and routing")
 	.showHelpAfterError(true)
 	.option("--quiet", "suppress non-error logs")
