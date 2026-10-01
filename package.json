@@ -25,7 +25,7 @@
 		"commander": "^14.0.0",
 		"dotenv": "^17.2.3",
 		"osm2geojson-lite": "^1.2.0",
-		"stream-json": "^1.9.0",
+		"stream-json": "^3.0.0",
 		"undici": "^7.6.0",
 		"zod": "^4.0.0"
 	},
