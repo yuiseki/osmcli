@@ -4,7 +4,7 @@ Agent-first OSM CLI for geocoding, AOI, POI, and routing.
 
 ## Development
 
-- Requires Node.js 22+ (ADR-0001)
+- Requires Node.js 22.23.4, 24.22.1, or 26.12.1 or newer within those release lines (ADR-0001)
 - Run: `npm ci`
 - First time: `cp .env.example .env`
 - Dev: `npm run dev -- --help`
